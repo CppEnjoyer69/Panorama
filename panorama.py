@@ -1,12 +1,12 @@
 import cv2
 
 Dirs = {
-    1 : "NORTH",
-    2 : "EAST",
-    3 : "SOUTH",
-    4 : "WEST"
+    1 : "EAST",
+    2 : "SOUTH",
+    3 : "WEST"
 }
-cap = cv2.VideoCapture(0)
+
+cap = cv2.VideoCapture(2)
 cap.set(cv2.CAP_PROP_FPS, 30)
 images = []
 err_dict = {
@@ -16,32 +16,55 @@ err_dict = {
 
 def takePicture():
     _, img = cap.read()
-    img = cv2.resize(img, (1920,1080))
+    img = cv2.resize(img, (1080,720))
     images.append(img)
     
-
 def Panorama(imgs):
     stitcher = cv2.Stitcher.create()
-    (retval, output) = stitcher.stitch(imgs)
+    (retval, stitchedImage) = stitcher.stitch(imgs)
+    
     if retval!= cv2.STITCHER_OK: 
         print(f"stitching falied with error code {retval} : {err_dict[retval]}")
         exit(retval)
     else:
-        pos = 0
-        for i in range(1,5):
-            step = 350
-            pos += step
-            output = cv2.putText(output, Dirs.get(i), (pos, 200), cv2.FONT_HERSHEY_COMPLEX, 3, (0, 0, 255), 4, cv2.LINE_AA, False)
-
         print('Your Panorama is ready!!!')  
-        cv2.imwrite("panorama.jpg", output)    
+        cv2.imwrite("panorama.jpg", stitchedImage)    
+
+def click_event(event, x, y, flags, params):
+
+    if event == cv2.EVENT_LBUTTONDOWN:
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        cv2.putText(image, "NORTH", (x - 50,y - 30), font,
+                        1, (0, 0, 255), 2)
+        cv2.putText(image, "|", (x, y), font,
+                        1, (255, 0, 255), 2)
+        pos = x
+        for i in range(1,4):
+            pos += step 
+            pos %= panoWidth
+            cv2.putText(image, Dirs.get(i), (pos - 50, y - 30), font,
+                        1, (0, 0, 255), 2)
+            cv2.putText(image, "|", (pos, y), font,
+                            1, (255, 0, 255), 2)
+            
+        cv2.imwrite('text.jpg', image)
+        cv2.destroyAllWindows()
+    
 
 if __name__ == '__main__':
-    counter = 0
-    while counter <= 5:
-        if(input("PRESS 'f': ") == 'f'):
-            takePicture()
-            counter+=1
-    Panorama(images)
+    # counter = 0
+    # while counter <= 9:
+    #     if(input("PRESS 'ENTER' ") == ''):
+    #         takePicture()
+    #         counter+=1
 
-cv2.destroyAllWindows()
+    # Panorama(images)
+    image = cv2.imread('kutas.jpg')
+    panoWidth = image.shape[1]
+    step = int(panoWidth / 4)
+    cv2.imshow('image', image)
+    cv2.setMouseCallback('image', click_event)
+    cv2.waitKey(0)
+
+    cv2.destroyAllWindows()
+
