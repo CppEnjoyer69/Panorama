@@ -69,7 +69,7 @@ if __name__ == '__main__':
             counter+=1
 
     Panorama(images)
-    image = cv2.imread('kutas.jpg')
+    image = cv2.imread('panorama.jpg')
     panoWidth = image.shape[1]
     step = int(panoWidth / 4)
     cv2.imshow('image', image)
