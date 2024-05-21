@@ -62,13 +62,13 @@ def click_event(event, x, y, flags, params):
     
 
 if __name__ == '__main__':
-    # counter = 0
-    # while counter <= 9:
-    #     if(input("PRESS 'ENTER' ") == ''):
-    #         takePicture()
-    #         counter+=1
+    counter = 0
+    while counter <= 9:
+        if(input("PRESS 'ENTER' ") == ''):
+            takePicture()
+            counter+=1
 
-    # Panorama(images)
+    Panorama(images)
     image = cv2.imread('kutas.jpg')
     panoWidth = image.shape[1]
     step = int(panoWidth / 4)
