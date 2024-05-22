@@ -1,9 +1,10 @@
 import cv2
-from datetime import date
+import datetime
+from datetime import date, datetime
 
 today = date.today()
+
 cap = cv2.VideoCapture(0)
-cap.set(cv2.CAP_PROP_FPS, 30)
 images = []
 
 err_dict = {
@@ -14,12 +15,12 @@ err_dict = {
 Dirs = ['E', 'S', 'W']
 m_Dirs = ['NE', 'SE', 'SW', 'NW']
 
-def takePicture(num : int):
-    _, img = cap.read()
+def takePicture(num : int, img):
+    time = datetime.now()
     img = cv2.resize(img, (1080,720))
     img = img[100:630, 0:1080]     #CROPOWANIE ZDJĘCIA, USTAWCIE POD SIEBIE
     images.append(img)
-    cv2.imwrite("pic_"+ str(num)+"_ "+ str(today) + ".jpg", img)
+    cv2.imwrite("URC_PICS/pic_" + str(num) + "_" + str(time) + ".jpg", img)
 
 def Panorama(imgs):
     stitcher = cv2.Stitcher.create()
@@ -64,12 +65,13 @@ def click_event(event, x, y, flags, params):
     
 
 if __name__ == '__main__':
+    _, img = cap.read()
     counter = 0
     inp = input("Press ENTER to take pictures or 'q' TO STOP/QUIT: ")
     while inp != 'q':
         inp = input('Picture(' + str(counter) + ")")
         if(inp == ''):
-            takePicture(counter)
+            takePicture(counter, img)
             counter+=1
 
     Panorama(images)
