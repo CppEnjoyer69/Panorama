@@ -36,7 +36,7 @@ def click_event(event, x, y, flags, params):
 
 if __name__ == '__main__':
 
-    image = cv2.imread('car.jpg')
+    image = cv2.imread('car.jpg') #dajecie tu nazwe zdjecia 
     panoWidth = image.shape[1]
     step = int(panoWidth / 4)
 
