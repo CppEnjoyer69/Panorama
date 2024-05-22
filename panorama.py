@@ -17,6 +17,7 @@ m_Dirs = ['NE', 'SE', 'SW', 'NW']
 
 def takePicture(num : int, img):
     time = datetime.now()
+    _, img = cap.read()
     img = cv2.resize(img, (1080,720))
     img = img[100:630, 0:1080]     #CROPOWANIE ZDJĘCIA, USTAWCIE POD SIEBIE
     images.append(img)
@@ -65,10 +66,10 @@ def click_event(event, x, y, flags, params):
     
 
 if __name__ == '__main__':
-    _, img = cap.read()
     counter = 0
     inp = input("Press ENTER to take pictures or 'q' TO STOP/QUIT: ")
     while inp != 'q':
+        _, img = cap.read()
         inp = input('Picture(' + str(counter) + ")")
         if(inp == ''):
             takePicture(counter, img)
