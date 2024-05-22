@@ -1,0 +1,1 @@
+zdjęcia do awaryjnej panoramy
