@@ -1,23 +1,26 @@
 import cv2
+from datetime import date
 
-
-Dirs = ['E', 'S', 'W']
-
-m_Dirs = ['NE', 'SE', 'SW', 'NW']
-
-cap = cv2.VideoCapture(2)
+today = date.today()
+cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FPS, 30)
 images = []
+
 err_dict = {
     cv2.STITCHER_OK: "STITCHER_OK",
     cv2.STITCHER_ERR_NEED_MORE_IMGS: "STITCHER_ERR_NEED_MORE_IMGS",
 }
 
-def takePicture():
+Dirs = ['E', 'S', 'W']
+m_Dirs = ['NE', 'SE', 'SW', 'NW']
+
+def takePicture(num : int):
     _, img = cap.read()
     img = cv2.resize(img, (1080,720))
+    img = img[100:630, 0:1080]     #CROPOWANIE ZDJĘCIA, USTAWCIE POD SIEBIE
     images.append(img)
-    
+    cv2.imwrite("pic_"+ str(num)+"_ "+ str(today) + ".jpg", img)
+
 def Panorama(imgs):
     stitcher = cv2.Stitcher.create()
     (retval, stitchedImage) = stitcher.stitch(imgs)
@@ -27,7 +30,7 @@ def Panorama(imgs):
         exit(retval)
     else:
         print('Your Panorama is ready!!!')  
-        cv2.imwrite("panorama.jpg", stitchedImage)    
+        cv2.imwrite("picture.jpg", stitchedImage)    
 
 def click_event(event, x, y, flags, params):
 
@@ -54,24 +57,27 @@ def click_event(event, x, y, flags, params):
             cv2.putText(image, "|", (m_pos, y), font,
                             0.6, (255, 0, 255), 2)
             m_pos += step
-            m_pos %= panoWidth
+            m_pos %= panoWidth  
             
-            
-        cv2.imwrite('text.jpg', image)
+        cv2.imwrite('PANORAMA.jpg', image)
         cv2.destroyAllWindows()
     
 
 if __name__ == '__main__':
     counter = 0
-    while counter <= 9:
-        if(input("PRESS 'ENTER' ") == ''):
-            takePicture()
+    inp = input("Press ENTER to take pictures or 'q' TO STOP/QUIT: ")
+    while inp != 'q':
+        inp = input('Picture(' + str(counter) + ")")
+        if(inp == ''):
+            takePicture(counter)
             counter+=1
 
     Panorama(images)
-    image = cv2.imread('panorama.jpg')
+
+    image = cv2.imread('picture.jpg')
     panoWidth = image.shape[1]
     step = int(panoWidth / 4)
+
     cv2.imshow('image', image)
     cv2.setMouseCallback('image', click_event)
     cv2.waitKey(0)
