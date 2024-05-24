@@ -17,7 +17,7 @@ m_Dirs = ['NE', 'SE', 'SW', 'NW']
 
 def takePicture(num : int, img):
     time = datetime.now()
-    _, img = cap.read()
+    #_, img = cap.read() 
     img = cv2.resize(img, (1080,720))
     img = img[100:630, 0:1080]     #CROPOWANIE ZDJĘCIA, USTAWCIE POD SIEBIE
     images.append(img)
