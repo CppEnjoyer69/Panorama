@@ -1,10 +1,9 @@
-import cv2
-import datetime
-from datetime import date, datetime
+import cv2, threading
+from datetime import datetime
 
-today = date.today()
 
 cap = cv2.VideoCapture(0)
+
 images = []
 
 err_dict = {
@@ -14,10 +13,20 @@ err_dict = {
 
 Dirs = ['E', 'S', 'W']
 m_Dirs = ['NE', 'SE', 'SW', 'NW']
+class lastFrame(threading.Thread):
+    def __init__(self, camera):
+        self.camera = camera
+        self.frame = None
+        super().__init__()
+        # Start thread
+        self.start()
+
+    def run(self):
+        while True:
+            ret, self.frame = self.camera.read()
 
 def takePicture(num : int, img):
     time = datetime.now()
-    _, img = cap.read()
     img = cv2.resize(img, (1080,720))
     img = img[100:630, 0:1080]     #CROPOWANIE ZDJĘCIA, USTAWCIE POD SIEBIE
     images.append(img)
@@ -63,27 +72,27 @@ def click_event(event, x, y, flags, params):
             
         cv2.imwrite('PANORAMA.jpg', image)
         cv2.destroyAllWindows()
-    
 
-if __name__ == '__main__':
-    counter = 0
-    inp = input("Press ENTER to take pictures or 'q' TO STOP/QUIT: ")
-    while inp != 'q':
-        _, img = cap.read()
-        inp = input('Picture(' + str(counter) + ")")
-        if(inp == ''):
-            takePicture(counter, img)
-            counter+=1
+last = lastFrame(cap)
+counter = 0
+inp = input("Press ENTER to take pictures or 'q' TO STOP/QUIT: ")
 
-    Panorama(images)
+while inp != 'q':
+    inp = input('Picture(' + str(counter) + ")")
+    if(inp == ''):
+        img = last.frame
+        takePicture(counter, img)
+        counter+=1
 
-    image = cv2.imread('picture.jpg')
-    panoWidth = image.shape[1]
-    step = int(panoWidth / 4)
+Panorama(images)
 
-    cv2.imshow('image', image)
-    cv2.setMouseCallback('image', click_event)
-    cv2.waitKey(0)
+image = cv2.imread('picture.jpg')
+panoWidth = image.shape[1]
+step = int(panoWidth / 4)
 
-    cv2.destroyAllWindows()
+cv2.imshow('image', image)
+cv2.setMouseCallback('image', click_event)
+cv2.waitKey(0)
+
+cv2.destroyAllWindows()
 
