@@ -1,11 +1,8 @@
 import cv2, threading
 from datetime import datetime
 
-
 cap = cv2.VideoCapture(0)
-
 images = []
-
 err_dict = {
     cv2.STITCHER_OK: "STITCHER_OK",
     cv2.STITCHER_ERR_NEED_MORE_IMGS: "STITCHER_ERR_NEED_MORE_IMGS",
@@ -13,6 +10,7 @@ err_dict = {
 
 Dirs = ['E', 'S', 'W']
 m_Dirs = ['NE', 'SE', 'SW', 'NW']
+
 class lastFrame(threading.Thread):
     def __init__(self, camera):
         self.camera = camera
