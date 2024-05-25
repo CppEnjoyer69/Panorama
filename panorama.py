@@ -27,10 +27,6 @@ class lastFrame(threading.Thread):
 
 def takePicture(num : int, img):
     time = datetime.now()
-<<<<<<< HEAD
-=======
-    #_, img = cap.read() 
->>>>>>> e55fefcfa4b1892653a4eacaeb4ad2ec6891b10e
     img = cv2.resize(img, (1080,720))
     img = img[100:630, 0:1080]     #CROPOWANIE ZDJĘCIA, USTAWCIE POD SIEBIE
     images.append(img)
